@@ -1,16 +1,41 @@
 
+// XXX: gjs is too stupid for ES6 Modules
+var debug;
+var SignalHandler;
+
 (function(global) {
 
-	const _lang                 = imports.lang;
-	const _Gio                  = imports.gi.Gio;
-	const _SettingsSchemaSource = _Gio.SettingsSchemaSource;
-	const _DEBUG_FLAG           = false;
+	const _lang       = imports.lang;
+	const _Gio        = imports.gi.Gio;
+	const _DEBUG_FLAG = false;
 
 
 
 	/*
 	 * IMPLEMENTATION
 	 */
+
+	const _debug = function() {
+
+		let debug = _DEBUG_FLAG;
+		let data  = Array.from(arguments);
+		if (debug === true && data.length > 0) {
+
+			let now  = new Date();
+			let time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + '.' + now.getMilliseconds();
+
+			data.forEach(message => {
+				global.log(time + ' [outtaspace]: ' + message);
+			});
+
+			return true;
+
+		}
+
+
+		return false;
+
+	};
 
 	const _SignalHandler = new _lang.Class({
 
@@ -94,71 +119,8 @@
 	 * EXPORTS
 	 */
 
-	Object.assign(global, {
-
-		debug: function() {
-
-			let debug = _DEBUG_FLAG;
-			let data  = Array.from(arguments);
-			if (debug === true && data.length > 0) {
-
-				let now  = new Date();
-				let time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + '.' + now.getMilliseconds();
-
-				data.forEach(message => {
-					global.log(time + ' [outtaspace]: ' + message);
-				});
-
-				return true;
-
-			}
-
-
-			return false;
-
-		},
-
-		SignalHandler: _SignalHandler,
-
-		getSettings: function() {
-
-			let extension = _ExtensionUtils.getCurrentExtension() || null;
-			if (extension !== null) {
-
-				let schema = extension.metadata['settings-schema'] || null;
-				if (schema !== null) {
-
-					let folder = extension.dir.get_child('schemas');
-					let source = null;
-					if (folder.query_exists(null)) {
-						source = _SettingsSchemaSource.new_from_directory(
-							folder.get_path(),
-							_SettingsSchemaSource.get_default(),
-							false
-						);
-					} else {
-						source = _SettingsSchemaSource.get_default();
-					}
-
-					let reference = source.lookup(schema, true) || null;
-					if (reference !== null) {
-
-						return new _Gio.Settings({
-							settings_schema: reference
-						});
-
-					}
-
-				}
-
-			}
-
-
-			return null;
-
-		}
-
-	});
+	debug         = _debug;
+	SignalHandler = _SignalHandler;
 
 })(typeof global !== 'undefined' ? global : this);
 

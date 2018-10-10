@@ -1,4 +1,8 @@
 
+// XXX: gjs is too stupid for ES6 Modules
+var PanelManager;
+
+
 (function(global) {
 
 	const _me          = imports.misc.extensionUtils.getCurrentExtension();
@@ -27,13 +31,15 @@
 		}
 
 
-		this._signals = new _convenience.SignalsHandler();
+		this._signals = new _convenience.SignalHandler();
 
 		this._signals.add(_main.overview, 'showing', _lang.bind(this, function() {
+			global.log('showing-overview');
 			this.show('showing-overview');
 		}));
 
 		this._signals.add(_main.overview, 'hiding', _lang.bind(this, function() {
+			global.log('hiding-overview');
 			this.hide('hiding-overview');
 		}));
 
@@ -77,6 +83,8 @@
 				this.__old_tween.apply(_MESSAGETRAY, arguments);
 			};
 
+
+			this.hide('init');
 
 			_mainloop.timeout_add(100, _lang.bind(this, _bind_ui));
 
@@ -183,12 +191,7 @@
 	 * EXPORTS
 	 */
 
-	Object.assign(global, {
-
-		PanelManager: _PanelManager
-
-	});
-
+	PanelManager = _PanelManager;
 
 })(typeof global !== 'undefined' ? global : this);
 

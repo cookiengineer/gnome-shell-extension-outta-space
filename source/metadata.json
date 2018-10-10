@@ -1,0 +1,9 @@
+{
+	"shell-version": [
+		"3.28","3.30", "3.32","3.34","3.36"
+	],
+	"uuid":        "outtaspace@cookie.engineer",
+	"name":        "Outta Space",
+	"description": "Screen Space optimizations for advanced multihead usage.",
+	"url":         "https://github.com/cookiengineer/gnome-shell-extension-outtaspace"
+}

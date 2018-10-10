@@ -34,16 +34,17 @@ var PanelManager;
 		this._signals = new _convenience.SignalHandler();
 
 		this._signals.add(_main.overview, 'showing', _lang.bind(this, function() {
-			global.log('showing-overview');
+			_debug('showing-overview');
 			this.show('showing-overview');
 		}));
 
 		this._signals.add(_main.overview, 'hiding', _lang.bind(this, function() {
-			global.log('hiding-overview');
+			_debug('hiding-overview');
 			this.hide('hiding-overview');
 		}));
 
 		this._signals.add(manager, 'monitors-changed', _lang.bind(this, function() {
+			_debug('monitors-changed');
 			this.__base_y = _PANELBOX.y;
 		}));
 

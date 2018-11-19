@@ -5,10 +5,9 @@ var PanelManager;
 
 (function(global) {
 
-	const _me          = imports.misc.extensionUtils.getCurrentExtension();
-	const _convenience = _me.imports.convenience;
-	const _debug       = _convenience.debug;
-	const _lang        = imports.lang;
+	const _            = imports.misc.extensionUtils.getCurrentExtension();
+	const console      = _.imports.console.console;
+	const EventEmitter = _.imports.EventEmitter.EventEmitter;
 	const _main        = imports.ui.main;
 	const _mainloop    = imports.mainloop;
 	const _tweener     = imports.ui.tweener;
@@ -31,22 +30,19 @@ var PanelManager;
 		}
 
 
-		this._signals = new _convenience.SignalHandler();
+		this._signals = new EventEmitter();
 
-		this._signals.add(_main.overview, 'showing', _lang.bind(this, function() {
-			_debug('showing-overview');
-			this.show('showing-overview');
-		}));
+		this._signals.add(_main.overview, 'showing', _ => {
+			this.show('overview');
+		});
 
-		this._signals.add(_main.overview, 'hiding', _lang.bind(this, function() {
-			_debug('hiding-overview');
-			this.hide('hiding-overview');
-		}));
+		this._signals.add(_main.overview, 'hiding', _ => {
+			this.hide('overview');
+		});
 
-		this._signals.add(manager, 'monitors-changed', _lang.bind(this, function() {
-			_debug('monitors-changed');
+		this._signals.add(manager, 'monitors-changed', _ => {
 			this.__base_y = _PANELBOX.y;
-		}));
+		});
 
 	};
 
@@ -56,11 +52,9 @@ var PanelManager;
 	 * IMPLEMENTATION
 	 */
 
-	const _PanelManager = new _lang.Class({
+	const _PanelManager = class PanelManager {
 
-		Name: 'PanelManager',
-
-		_init: function(settings) {
+		constructor(settings) {
 
 			settings = settings instanceof Object ? settings : {};
 
@@ -87,11 +81,13 @@ var PanelManager;
 
 			this.hide('init');
 
-			_mainloop.timeout_add(100, _lang.bind(this, _bind_ui));
+			_mainloop.timeout_add(100, _ => {
+				_bind_ui.call(this);
+			});
 
-		},
+		}
 
-		destroy: function() {
+		destroy() {
 
 			let signals = this._signals || null;
 			if (signals !== null) {
@@ -112,11 +108,11 @@ var PanelManager;
 				trackFullscreen: true
 			});
 
-		},
+		}
 
-		show: function(trigger) {
+		show(trigger) {
 
-			_debug('show(' + trigger + ')');
+			console.log('show(' + trigger + ')');
 
 			if (this.__tweening === true) {
 				_tweener.removeTweens(_PANELBOX, 'y');
@@ -137,18 +133,18 @@ var PanelManager;
 					y:    this.__base_y,
 					time: 0.5,
 					transition: 'easeOutQuad',
-					onComplete: _lang.bind(this, function() {
+					onComplete: () => {
 						this.__tweening = false;
-					})
+					}
 				});
 
 			}
 
-		},
+		}
 
-		hide: function(trigger) {
+		hide(trigger) {
 
-			_debug('hide(' + trigger + ')');
+			console.log('hide(' + trigger + ')');
 
 
 			let delta_y  = -1 * _PANELBOX.height;
@@ -169,7 +165,7 @@ var PanelManager;
 				y:    this.__base_y + delta_y,
 				time: 0.5,
 				transition: 'easeOutQuad',
-				onComplete: _lang.bind(this, function() {
+				onComplete: _ => {
 
 					this.__tweening = false;
 					_PANELBOX.hide();
@@ -179,12 +175,12 @@ var PanelManager;
 						right_box.emit('allocation-changed', right_box.get_allocation_box(), null);
 					}
 
-				})
+				}
 			});
 
 		}
 
-	});
+	};
 
 
 

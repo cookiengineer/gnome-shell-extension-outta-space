@@ -1,13 +1,9 @@
 
 // XXX: gjs is too stupid for ES6 Modules
-var debug;
-var SignalHandler;
+var EventEmitter;
+
 
 (function(global) {
-
-	const _lang       = imports.lang;
-	const _Gio        = imports.gi.Gio;
-	const _DEBUG_FLAG = false;
 
 
 
@@ -15,47 +11,21 @@ var SignalHandler;
 	 * IMPLEMENTATION
 	 */
 
-	const _debug = function() {
+	const _EventEmitter = class EventEmitter {
 
-		let debug = _DEBUG_FLAG;
-		let data  = Array.from(arguments);
-		if (debug === true && data.length > 0) {
-
-			let now  = new Date();
-			let time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + '.' + now.getMilliseconds();
-
-			data.forEach(message => {
-				global.log(time + ' [outtaspace]: ' + message);
-			});
-
-			return true;
-
+		constructor() {
+			this.__signals = [];
 		}
 
-
-		return false;
-
-	};
-
-	const _SignalHandler = new _lang.Class({
-
-		Name: 'outtaspace.SignalHandler',
-
-		_init: function() {
-
-			this.__signals = [];
-
-		},
-
-		destroy: function() {
+		destroy() {
 
 			this.__signals.forEach(entry => {
 				this.remove(entry.element, entry.event)
 			});
 
-		},
+		}
 
-		add: function(element, event, callback) {
+		add(element, event, callback) {
 
 			event    = typeof event === 'string'    ? event    : null;
 			callback = callback instanceof Function ? callback : null;
@@ -76,9 +46,9 @@ var SignalHandler;
 
 			return false;
 
-		},
+		}
 
-		remove: function(element, event) {
+		remove(element, event) {
 
 			element = element !== undefined     ? element : null;
 			event   = typeof event === 'string' ? event   : null;
@@ -111,7 +81,7 @@ var SignalHandler;
 
 		}
 
-	});
+	};
 
 
 
@@ -119,8 +89,7 @@ var SignalHandler;
 	 * EXPORTS
 	 */
 
-	debug         = _debug;
-	SignalHandler = _SignalHandler;
+	EventEmitter = _EventEmitter;
 
 })(typeof global !== 'undefined' ? global : this);
 

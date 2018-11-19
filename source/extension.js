@@ -1,14 +1,14 @@
 
-const _             = imports.misc.extensionUtils.getCurrentExtension();
-const _main         = imports.ui.main;
-const _convenience  = _.imports.convenience;
-const _debug        = _convenience.debug;
-const _PanelManager = _.imports.PanelManager.PanelManager;
+const _            = imports.misc.extensionUtils.getCurrentExtension();
+const console      = _.imports.console.console;
+const PanelManager = _.imports.PanelManager.PanelManager;
+let   _MANAGER     = null;
 
 
-let _manager  = null;
-let _settings = {};
 
+/*
+ * EXPORTS
+ */
 
 function init() {
 
@@ -16,24 +16,23 @@ function init() {
 
 function enable() {
 
-	_debug('enable()');
+	console.clear();
+	console.info('outta-space enabled.');
 
-	if (_manager === null) {
-		_manager = new _PanelManager({});
+	if (_MANAGER === null) {
+		_MANAGER = new PanelManager({});
 	}
 
 }
 
 function disable() {
 
-	_debug('disable()');
+	console.warn('outta-space disabled.');
 
-	if (_manager !== null) {
-		_manager.destroy();
+	if (_MANAGER !== null) {
+		_MANAGER.destroy();
+		_MANAGER = null;
 	}
-
-	_manager  = null;
-	_settings = null;
 
 }
 

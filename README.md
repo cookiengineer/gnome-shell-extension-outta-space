@@ -11,6 +11,13 @@ This GNOME Shell extension requires `gnome-shell` version `3.30+`
 and `xprop` version `1.2.3+`. The `xprop` tool is required to
 allow maximized windows to be displayed without window decorations.
 
+Wayland support is only possible with `GTK+4` and later versions,
+as the necessary API will land inside GTK and can't be realized
+via alternative APIs or external toolkits.
+
+See the [hide titlebar not respected in wayland](https://bugzilla.gnome.org/show_bug.cgi?id=775061)
+issue for details.
+
 # AUR Installation (Arch Linux)
 
 ```bash

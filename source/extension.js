@@ -35,8 +35,6 @@ function enable() {
 
 function disable() {
 
-	console.warn('outta-space disabled.');
-
 	if (MANAGER.panel !== null) {
 		MANAGER.panel.destroy();
 		MANAGER.panel = null;
@@ -46,6 +44,8 @@ function disable() {
 		MANAGER.window.destroy();
 		MANAGER.window = null;
 	}
+
+	console.warn('outta-space disabled.');
 
 }
 

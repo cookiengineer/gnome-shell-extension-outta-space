@@ -12,6 +12,7 @@ var WindowManager;
 	const _Meta        = imports.gi.Meta;
 	const _main        = imports.ui.main;
 	const _mainloop    = imports.mainloop;
+	const _WORKSPACES  = global.screen || global.workspace_manager;
 
 
 
@@ -110,19 +111,30 @@ var WindowManager;
 			super();
 
 
+			let workspaces = _WORKSPACES || null;
+			if (workspaces !== null) {
+
+				for (let w = 0, wl = workspaces.n_workspaces; w < wl; w++) {
+
+					let workspace = workspaces.get_workspace_by_index(w) || null;
+					if (workspace !== null) {
+
+						this.bind(workspace, 'window-added', (ws, window) => {
+							_mainloop.idle_add(_ => this.hide(window));
+						});
+
+					}
+
+				}
+
+			}
+
+
 			_mainloop.timeout_add(100, _ => {
 
 				let windows = global.get_window_actors().map(win => win.meta_window);
 				if (windows.length > 0) {
-
-					windows.forEach(window => {
-
-						if (window.window_type !== _Meta.WindowType.DESKTOP) {
-							_hide_titlebar(window);
-						}
-
-					});
-
+					windows.forEach(window => this.hide(window));
 				}
 
 			});
@@ -131,17 +143,32 @@ var WindowManager;
 
 		destroy() {
 
+			this.unbind(null, null);
+
+
 			let windows = global.get_window_actors().map(win => win.meta_window);
 			if (windows.length > 0) {
+				windows.forEach(window => this.show(window));
+			}
 
-				windows.forEach(window => {
+		}
 
-					if (window.window_type !== _Meta.WindowType.DESKTOP) {
-						_show_titlebar(window);
-					}
+		show(window) {
 
-				});
+			console.log('WindowManager.show("' + window.title.trim() + '")');
 
+			if (window.window_type !== _Meta.WindowType.DESKTOP) {
+				_show_titlebar(window);
+			}
+
+		}
+
+		hide(window) {
+
+			console.log('WindowManager.hide("' + window.title.trim() + '")');
+
+			if (window.window_type !== _Meta.WindowType.DESKTOP) {
+				_hide_titlebar(window);
 			}
 
 		}

@@ -90,7 +90,7 @@ var PanelManager;
 
 		show(trigger) {
 
-			console.log('show("' + trigger + '")');
+			console.log('PanelManager.show("' + trigger + '")');
 
 
 			if (this.__tweening === true) {
@@ -123,7 +123,7 @@ var PanelManager;
 
 		hide(trigger) {
 
-			console.log('hide("' + trigger + '")');
+			console.log('PanelManager.hide("' + trigger + '")');
 
 
 			let delta_y  = -1 * _PANELBOX.height;

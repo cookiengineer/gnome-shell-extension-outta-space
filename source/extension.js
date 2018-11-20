@@ -1,8 +1,12 @@
 
-const _            = imports.misc.extensionUtils.getCurrentExtension();
-const console      = _.imports.console.console;
-const PanelManager = _.imports.PanelManager.PanelManager;
-let   _MANAGER     = null;
+const _             = imports.misc.extensionUtils.getCurrentExtension();
+const console       = _.imports.console.console;
+const PanelManager  = _.imports.PanelManager.PanelManager;
+const WindowManager = _.imports.WindowManager.WindowManager;
+const MANAGER       = {
+	panel:  null,
+	window: null
+};
 
 
 
@@ -19,8 +23,12 @@ function enable() {
 	console.clear();
 	console.info('outta-space enabled.');
 
-	if (_MANAGER === null) {
-		_MANAGER = new PanelManager({});
+	if (MANAGER.panel === null) {
+		MANAGER.panel = new PanelManager({});
+	}
+
+	if (MANAGER.window === null) {
+		MANAGER.window = new WindowManager({});
 	}
 
 }
@@ -29,9 +37,14 @@ function disable() {
 
 	console.warn('outta-space disabled.');
 
-	if (_MANAGER !== null) {
-		_MANAGER.destroy();
-		_MANAGER = null;
+	if (MANAGER.panel !== null) {
+		MANAGER.panel.destroy();
+		MANAGER.panel = null;
+	}
+
+	if (MANAGER.window !== null) {
+		MANAGER.window.destroy();
+		MANAGER.window = null;
 	}
 
 }

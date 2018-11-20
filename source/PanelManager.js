@@ -10,6 +10,7 @@ var PanelManager;
 	const EventEmitter = _.imports.EventEmitter.EventEmitter;
 	const _main        = imports.ui.main;
 	const _mainloop    = imports.mainloop;
+	const _manager     = global.screen || _main.layoutManager;
 	const _tweener     = imports.ui.tweener;
 	const _MESSAGETRAY = _main.messageTray;
 	const _PANELBOX    = _main.layoutManager.panelBox;
@@ -17,49 +18,16 @@ var PanelManager;
 
 
 	/*
-	 * HELPERS
-	 */
-
-	const _bind_ui = function() {
-
-		let manager = null;
-		if (typeof global.screen !== 'undefined') {
-			manager = global.screen;
-		} else {
-			manager = _main.layoutManager;
-		}
-
-
-		this._signals = new EventEmitter();
-
-		this._signals.add(_main.overview, 'showing', _ => {
-			this.show('overview');
-		});
-
-		this._signals.add(_main.overview, 'hiding', _ => {
-			this.hide('overview');
-		});
-
-		this._signals.add(manager, 'monitors-changed', _ => {
-			this.__base_y = _PANELBOX.y;
-		});
-
-	};
-
-
-
-	/*
 	 * IMPLEMENTATION
 	 */
 
-	const _PanelManager = class PanelManager {
+	const _PanelManager = class PanelManager extends EventEmitter {
 
-		constructor(settings) {
+		constructor() {
 
-			settings = settings instanceof Object ? settings : {};
+			super();
 
-			this._settings   = Object.assign({}, settings);
-			this._signals    = null;
+
 			this.__base_y    = _PANELBOX.y;
 			this.__old_tween = null;
 			this.__tweening  = false;
@@ -82,17 +50,27 @@ var PanelManager;
 			this.hide('init');
 
 			_mainloop.timeout_add(100, _ => {
-				_bind_ui.call(this);
+
+				this.bind(_main.overview, 'showing', _ => {
+					this.show('overview');
+				});
+
+				this.bind(_main.overview, 'hiding', _ => {
+					this.hide('overview');
+				});
+
+				this.bind(_manager, 'monitors-changed', _ => {
+					this.__base_y = _PANELBOX.y;
+				});
+
 			});
 
 		}
 
 		destroy() {
 
-			let signals = this._signals || null;
-			if (signals !== null) {
-				signals.destroy();
-			}
+			this.unbind(null, null);
+
 
 			let old_tween = this.__old_tween || null;
 			if (old_tween !== null) {
@@ -112,7 +90,8 @@ var PanelManager;
 
 		show(trigger) {
 
-			console.log('show(' + trigger + ')');
+			console.log('show("' + trigger + '")');
+
 
 			if (this.__tweening === true) {
 				_tweener.removeTweens(_PANELBOX, 'y');
@@ -144,7 +123,7 @@ var PanelManager;
 
 		hide(trigger) {
 
-			console.log('hide(' + trigger + ')');
+			console.log('hide("' + trigger + '")');
 
 
 			let delta_y  = -1 * _PANELBOX.height;

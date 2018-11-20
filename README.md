@@ -5,6 +5,11 @@ This GNOME Shell extension can be seen as a minimalistic extension
 that enhances the GNOME Shell for space usage on smaller screens
 (e.g. Laptop displays).
 
+# Requirements
+
+This GNOME Shell extension requires `gnome-shell` version `3.30+`
+and `xprop` version `1.2.3+`. The `xprop` tool is required to
+allow maximized windows to be displayed without window decorations.
 
 # AUR Installation (Arch Linux)
 

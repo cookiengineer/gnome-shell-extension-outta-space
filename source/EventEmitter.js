@@ -5,6 +5,9 @@ var EventEmitter;
 
 (function(global) {
 
+	const _       = imports.misc.extensionUtils.getCurrentExtension();
+	const console = _.imports.console.console;
+
 
 
 	/*
@@ -18,14 +21,10 @@ var EventEmitter;
 		}
 
 		destroy() {
-
-			this.__signals.forEach(entry => {
-				this.remove(entry.element, entry.event)
-			});
-
+			this.unbind(null, null);
 		}
 
-		add(element, event, callback) {
+		bind(element, event, callback) {
 
 			event    = typeof event === 'string'    ? event    : null;
 			callback = callback instanceof Function ? callback : null;
@@ -48,7 +47,7 @@ var EventEmitter;
 
 		}
 
-		remove(element, event) {
+		unbind(element, event) {
 
 			element = element !== undefined     ? element : null;
 			event   = typeof event === 'string' ? event   : null;

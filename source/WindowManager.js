@@ -46,26 +46,43 @@ var WindowManager;
 
 	const _show_titlebar = function(window) {
 
-		let id = _get_window_id(window);
-		if (id !== null) {
+		if (typeof window.set_hide_titlebar_when_maximized === 'function') {
 
-			let [ success, pid ] = _GLib.spawn_async(null, [
-				'xprop',
-				'-id',  id,
-				'-f',   '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '32c',
-				'-set', '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '0x0'
-			], null, _GLib.SpawnFlags.SEARCH_PATH | _GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+			// Wayland Mutter API
+			window.set_hide_titlebar_when_maximized(false);
 
-			_GLib.child_watch_add(_GLib.PRIORITY_DEFAULT, pid, _ => {
+			let flags = _Meta.MaximizeFlags.BOTH;
+			let state = window.get_maximized();
+			if (state === flags) {
+				window.unmaximize(flags);
+				window.maximize(flags);
+			}
 
-				let flags = _Meta.MaximizeFlags.BOTH;
-				let state = window.get_maximized();
-				if (state === flags) {
-					window.unmaximize(flags);
-					window.maximize(flags);
-				}
+		} else {
 
-			});
+			// X11 fallback
+			let id = _get_window_id(window);
+			if (id !== null) {
+
+				let [ success, pid ] = _GLib.spawn_async(null, [
+					'xprop',
+					'-id',  id,
+					'-f',   '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '32c',
+					'-set', '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '0x0'
+				], null, _GLib.SpawnFlags.SEARCH_PATH | _GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+
+				_GLib.child_watch_add(_GLib.PRIORITY_DEFAULT, pid, _ => {
+
+					let flags = _Meta.MaximizeFlags.BOTH;
+					let state = window.get_maximized();
+					if (state === flags) {
+						window.unmaximize(flags);
+						window.maximize(flags);
+					}
+
+				});
+
+			}
 
 		}
 
@@ -73,26 +90,42 @@ var WindowManager;
 
 	const _hide_titlebar = function(window) {
 
-		let id = _get_window_id(window);
-		if (id !== null) {
+		if (typeof window.set_hide_titlebar_when_maximized === 'function') {
 
-			let [ success, pid ] = _GLib.spawn_async(null, [
-				'xprop',
-				'-id',  id,
-				'-f',   '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '32c',
-				'-set', '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '0x1'
-			], null, _GLib.SpawnFlags.SEARCH_PATH | _GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+			// Wayland Mutter API
+			window.set_hide_titlebar_when_maximized(true);
 
-			_GLib.child_watch_add(_GLib.PRIORITY_DEFAULT, pid, _ => {
+			let flags = _Meta.MaximizeFlags.BOTH;
+			let state = window.get_maximized();
+			if (state === flags) {
+				window.unmaximize(flags);
+				window.maximize(flags);
+			}
 
-				let flags = _Meta.MaximizeFlags.BOTH;
-				let state = window.get_maximized();
-				if (state === flags) {
-					window.unmaximize(flags);
-					window.maximize(flags);
-				}
+		} else {
 
-			});
+			let id = _get_window_id(window);
+			if (id !== null) {
+
+				let [ success, pid ] = _GLib.spawn_async(null, [
+					'xprop',
+					'-id',  id,
+					'-f',   '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '32c',
+					'-set', '_GTK_HIDE_TITLEBAR_WHEN_MAXIMIZED', '0x1'
+				], null, _GLib.SpawnFlags.SEARCH_PATH | _GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+
+				_GLib.child_watch_add(_GLib.PRIORITY_DEFAULT, pid, _ => {
+
+					let flags = _Meta.MaximizeFlags.BOTH;
+					let state = window.get_maximized();
+					if (state === flags) {
+						window.unmaximize(flags);
+						window.maximize(flags);
+					}
+
+				});
+
+			}
 
 		}
 

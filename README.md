@@ -3,7 +3,28 @@
 
 This GNOME Shell extension can be seen as a minimalistic extension
 that enhances the GNOME Shell for space usage on smaller screens
-(e.g. Laptop displays).
+(e.g. Laptop displays or Extreme Multihead setups).
+
+
+# Features
+
+The Outta Space GNOME Shell extension combines the features of the
+following other extensions and/or programs:
+
+- [x] [pixel-saver](https://github.com/deadalnix/pixel-saver)
+- [x] [hidetopbar](https://github.com/mlutfy/hidetopbar)
+
+
+# Planned Features
+
+It would be nice to extend this extension with the features of the
+following programs, because they would integrate nicely with Extreme
+Multihead setups and are much better in place within a GNOME Shell
+extension.
+
+- [ ] [clipboard-indicator](https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator)
+- [ ] [synergy](https://github.com/symless/synergy-core)
+
 
 # Requirements
 

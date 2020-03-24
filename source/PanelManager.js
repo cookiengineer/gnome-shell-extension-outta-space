@@ -127,7 +127,7 @@ var PanelManager;
 
 
 			let delta_y  = -1 * _PANELBOX.height;
-			let anchor_y = _PANELBOX.get_anchor_point()[1];
+			let anchor_y = _PANELBOX.get_pivot_point()[1];
 			if (anchor_y < 0) {
 				delta_y = -1 * delta_y;
 			}

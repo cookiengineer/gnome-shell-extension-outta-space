@@ -188,7 +188,9 @@ var WindowManager;
 
 		show(window) {
 
-			console.log('WindowManager.show("' + window.title.trim() + '")');
+			if (window.title !== null) {
+				console.log('WindowManager.show("' + window.title.trim() + '")');
+			}
 
 			if (window.window_type !== _Meta.WindowType.DESKTOP) {
 				_show_titlebar(window);
@@ -198,7 +200,9 @@ var WindowManager;
 
 		hide(window) {
 
-			console.log('WindowManager.hide("' + window.title.trim() + '")');
+			if (window.title !== null) {
+				console.log('WindowManager.hide("' + window.title.trim() + '")');
+			}
 
 			if (window.window_type !== _Meta.WindowType.DESKTOP) {
 				_hide_titlebar(window);

@@ -11,7 +11,7 @@ var PanelManager;
 	const _main        = imports.ui.main;
 	const _mainloop    = imports.mainloop;
 	const _manager     = global.screen || _main.layoutManager;
-	const _tweener     = imports.ui.tweener;
+	const _tweener     = imports.tweener.tweener;
 	const _MESSAGETRAY = _main.messageTray;
 	const _PANELBOX    = _main.layoutManager.panelBox;
 
